@@ -10,7 +10,7 @@ export default class Generator {
     constructor() {
         this.volatility = 0.2;
         this.timeStep =  1 / 252;
-        this.drift = 2;
+        this.drift = 0.05;
     }
     
     chooseNewsToAffectStock() {};
