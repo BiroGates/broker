@@ -1,9 +1,12 @@
 
+import { differenceInSeconds } from "date-fns";
 import BrokerRepository from "../../repository/broker.repository";
 import ClockTrigger from "../ClockTrigger/clockTrigger.entity";
 import Generator from "../Generator/generator.entity";
+import BrokerService from "../../services/broker.service";
 
 const brokerRepo = new BrokerRepository();
+const brokerService = new BrokerService();
 const clockTrigger = new ClockTrigger();
 const generator = new Generator();
 
@@ -21,7 +24,7 @@ export interface IStock {
 
 export interface INews {
     stockId: string;
-    durationTimeInSecons: number;
+    durationTimeInSeconds: number;
     affectedFactorNumber: number;
     stage: number;
 };
@@ -29,11 +32,7 @@ export interface INews {
 
 export default class Emitter {
     async updateStocksForMainBroker() {
-        console.log('Executed!');
-        // const stocksToBeAffectedByNews = (generator.chooseNewsToAffectStock()) as unknown as INews[];
-        // if(stocksToBeAffectedByNews) {
-        //    brokerRepo.updateStocksToAffectedStage(stocksToBeAffectedByNews);
-        //}
+        await brokerService.chooseNewsToAffectStock()
         
         const stocksAlreadyBeingAffected = await brokerRepo.listStocksThatAreBeingAffected();
         const stocksNotBeingAffected = await brokerRepo.listStocksThatAreNotBeingAffected();
@@ -49,23 +48,26 @@ export default class Emitter {
             const promises = stocksAlreadyBeingAffected.map(async stock => {
                 
                 const currentNewsByStockId = news.filter(item => item.stockId === stock.id);
-                const currentStageByNews = currentNewsByStockId.find(item => item.stage === stock.affectedStage);
+                const currentStageByNews = currentNewsByStockId.find(item => item.stage === (stock.affectedStage ?? 0));
 
                 if (currentStageByNews) {
-                    const timeElapsed = 120;
-    
-                    if(timeElapsed > currentStageByNews.durationTimeInSecons) {
+                    let timeElapsed = 0;
+                    // Make it better
+                    if (stock.startBeingAffectedAt)
+                    timeElapsed = differenceInSeconds(new Date(), stock.startBeingAffectedAt);
+                    if(timeElapsed > currentStageByNews.durationTimeInSeconds) {
                         stock.affectedStage = currentStageByNews.stage + 1;
                         stock.startBeingAffectedAt = new Date();   
                     }
                     
-                    stock.currentPrice = generator.generateStockPriceAffectedByNews(currentStageByNews.affectedFactorNumber,stock.currentPrice);
+                    stock.currentPrice = generator.generateStockPriceAffectedByNews(currentStageByNews.affectedFactorNumber, stock.currentPrice);
 
                 } else {
                     stock.beingAffected = false;
                     stock.affectedStage = null;
                     stock.startBeingAffectedAt = null;
                 }
+                console.log(stock.currentPrice);
                 await brokerRepo.updateStock(stock);
                 await brokerRepo.insertIntoStockPriceHistory(stock);
             });
@@ -76,7 +78,6 @@ export default class Emitter {
             const promises = stocksNotBeingAffected.map(async stock => {
                 const previousPrice = await brokerRepo.getPreviousPriceForStock(stock.id);
                 
-                console.log(stock.currentPrice);
                 if (!previousPrice.length) {
                     stock.currentPrice = generator.generateStockPrice(stock.currentPrice);
                 } else {

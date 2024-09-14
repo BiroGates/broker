@@ -3,6 +3,11 @@ import pool from "../database/pool";
 import { v4 as uuidv4 } from 'uuid';
 
 export default class BrokerRepository {
+    async chooseNewsToAffectStock() {
+        const [rows]: any[] = (await pool.query('SELECT * FROM stock WHERE beingAffected = 0 ORDER BY rand() LIMIT 1'));
+        return rows[0] as unknown as IStock;    
+    }
+
     async listStocksThatAreBeingAffected() {
         const [rows] = (await pool.query('SELECT * FROM stock WHERE beingAffected = 1'));
         return rows as unknown as IStock[];
@@ -41,7 +46,11 @@ export default class BrokerRepository {
         return affectedRows;
     };
     async updateStocks(){};
-    async updateStocksToAffectedStage(stock: IStock){};
+
+    async updateStockToAffectedStage(stock: IStock){
+        const [affectedRows] = await pool.query('UPDATE stock SET beingAffected = 1, affectedStage = 0, startBeingAffectedAt = now() WHERE id = ?', [stock.id]);
+        return affectedRows;
+    };
 
     async insertIntoStockPriceHistory(stock: IStock) {
         const [affectedRows] = await pool.query('insert into stock_price_history (id, price, at, stockId) values (?, ?, ?, ?)', [uuidv4(), stock.currentPrice.toFixed(2), new Date(), stock.id]);

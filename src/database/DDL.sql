@@ -15,8 +15,8 @@ CREATE TABLE stock (
     minPriceDay     int,
     beingAffected   tinyint,
     affectedStage   int NULL,
-    startBeingAffectedAt Date NULL,
-    lastUpdate Date,
+    startBeingAffectedAt datetime NULL,
+    lastUpdate Date
 ); 
 
 
@@ -25,14 +25,14 @@ CREATE TABLE news_affected (
     durationTimeInSeconds   INT, 
     affectedFactorNumber    INT,
     stage                   INT,
-    stockId					VARCHAR(200)
-    FOREIGN KEY (stockId) REFERENCES stock(id),    
+    stockId					VARCHAR(200),
+    FOREIGN KEY (stockId) REFERENCES stock(id)    
 );
 
 CREATE TABLE stock_price_history (
     id      VARCHAR(200) PRIMARY KEY,
     price   float,
-    at      date,
+    at      datetime,
     stockId	VARCHAR(200),
     FOREIGN KEY (stockId) REFERENCES stock(id)
 );
