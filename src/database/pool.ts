@@ -8,7 +8,14 @@ const pool = createPool({
   database: 'sivt',
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
+  typeCast(field, next) {
+    if (field.type === 'TINY') {
+      const x = field.string() === '1';
+      return x;
+    }
+    return next();
+  }
 });
 
 export default pool;

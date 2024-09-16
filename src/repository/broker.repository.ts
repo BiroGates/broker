@@ -28,8 +28,16 @@ export default class BrokerRepository {
         return rows as unknown as { price: number }[];
     }
 
-    async listStocks(){};
+    async listStocks() {
+        const [rows] = await pool.query('SELECT * FROM stock');
+        return rows as unknown as IStock[];
+    };
     
+    async getStockById(stockId: string) {
+        const [rows]: any[] = await pool.query('SELECT * FROM stock WHERE stockId = ?', [stockId]);
+        return rows[0] as unknown as IStock;
+    };
+
     async updateStock(stock: IStock) {
         const [affectedRows] = await pool.query(`UPDATE stock SET name = ?, currentPrice = ?, maxPriceDay = ?, minPriceDay = ?, beingAffected = ?, affectedStage = ?, startBeingAffectedAt = ?, lastUpdate = ? WHERE id = ?`, 
             [
@@ -45,6 +53,7 @@ export default class BrokerRepository {
             ]);
         return affectedRows;
     };
+
     async updateStocks(){};
 
     async updateStockToAffectedStage(stock: IStock){

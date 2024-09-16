@@ -20,7 +20,7 @@ export default class Generator {
         drift: number,              
         currentPrice: number        
     ): number {
-        const randomShock = Math.sqrt(this.timeStep) * this.generateRandom();
+        const randomShock = Math.sqrt(this.timeStep) * this.generateRandomNumber();
         const priceChange = drift * currentPrice * this.timeStep + this.volatility * currentPrice * randomShock;
         return currentPrice + priceChange;
     }
@@ -28,13 +28,13 @@ export default class Generator {
     generateStockPrice(
         previousPrice: number        
     ): number {
-        const randomShock = Math.sqrt(this.timeStep) * this.generateRandom();
+        const randomShock = Math.sqrt(this.timeStep) * this.generateRandomNumber();
         const priceChange = this.drift * previousPrice * this.timeStep + this.volatility * previousPrice * randomShock;
         return previousPrice + priceChange;
     }
 
 
-    generateRandom() {
+    generateRandomNumber() {
         let u = 0, v = 0;
         while (u === 0) u = Math.random(); // Converte [0,1) para (0,1)
         while (v === 0) v = Math.random();
