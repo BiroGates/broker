@@ -1,6 +1,6 @@
 
 import { differenceInSeconds } from "date-fns";
-import BrokerRepository from "../../repository/broker.repository";
+import BrokerRepository from "../Generator/repository/broker.repository";
 import ClockTrigger from "../ClockTrigger/clockTrigger.entity";
 import Generator from "../Generator/generator.entity";
 import BrokerService from "../../services/broker.service";

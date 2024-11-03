@@ -1,5 +1,5 @@
-import { IStock, INews } from "../enitty/Emiter/emitter.entity";
-import pool from "../database/pool";
+import { IStock, INews } from "../../Emiter/emitter.entity";
+import pool from "../../../database/pool";
 import { v4 as uuidv4 } from 'uuid';
 
 export default class BrokerRepository {
@@ -25,7 +25,7 @@ export default class BrokerRepository {
 
     async getPreviousPriceForStock(stockId: string) {
         const [rows] = await pool.query('SELECT price FROM stock_price_history WHERE stockId = ? order by at DESC limit 1', [stockId]);
-        return rows as unknown as { price: number }[];
+        return rows as unknown as { price: number }[];  
     }
 
     async listStocks(){};

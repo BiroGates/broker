@@ -10,6 +10,7 @@ export default class Generator {
     constructor() {
         this.volatility = 0.2;
         this.timeStep =  1 / 252;
+        // tendencia pra subir;
         this.drift = .05;
     }
     

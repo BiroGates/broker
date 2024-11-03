@@ -1,5 +1,5 @@
 import { IStock } from "../enitty/Emiter/emitter.entity";
-import BrokerRepository from "../repository/broker.repository";
+import BrokerRepository from "../enitty/Generator/repository/broker.repository";
 
 
 

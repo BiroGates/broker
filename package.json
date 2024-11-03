@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec ts-node src/server.ts",
+    "start": "nodemon --exec ts-node src/services/api/src/index.ts",
     "test": "nodemon --exec ts-node src/test_enviroment/index.ts"
   },
   "author": "",

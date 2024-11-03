@@ -9,7 +9,8 @@
     "outDir": "./dist",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,  // <---
-    "strictPropertyInitialization": false    
+    "strictPropertyInitialization": false,
+    "strictNullChecks": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
