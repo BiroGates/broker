@@ -1,17 +1,9 @@
 import { Request } from "express";
 import { AbstractStockService, BuyStocksInput, SellStockInput } from "../../service/stock/stocks.service";
 import { IStock } from "../../entity/stock/stock.entity";
+import { PickMatching } from "../../../helpers/types";
 
 
-
-type PickMatching<T> =
-    {   [K in keyof T as T[K] extends Function ? K : never]: 
-        ChangeReturnType<T[K], Parameters<T[K] extends (...args: any[]) => any ? T[K] : never>>}
-
-
-type ChangeReturnType<K, NewReturn> = K extends (...args: any[]) => any
-  ? (...args: any[]) => NewReturn
-  : never;
 
 type IStockValidator = PickMatching<AbstractStockService>;
 

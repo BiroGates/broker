@@ -19,7 +19,7 @@ export default class BrokerRepository {
     };
 
     async listNewsByStocksIds(stockIds: string[]) {
-        const [rows] = await pool.query('SELECT * FROM news_affected WHERE stockId IN (?)', [stockIds]);
+        const [rows] = await pool.query('SELECT * FROM news WHERE stockId IN (?)', [stockIds]);
         return rows as unknown as INews[];
     };
 

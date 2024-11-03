@@ -64,8 +64,8 @@ export default class StockRepository extends AbstractStockRepository{
             const currentStockPrice = await this.getStockPrice(sellInfo.stockId);
             const moneyToRecieveBySell = sellInfo.stockAmount * currentStockPrice;
             
-            await pool.query('UPDATE wallet_stock SET stockAmount = stockAmount - ? WHERE walletId = ?', [sellInfo.stockAmount, walletId])
-            await pool.query('UPDATE WALLET SET totalMoneyAmount = totalMoneyAmount + ?', [moneyToRecieveBySell]);
+            await pool.query('UPDATE wallet_stock SET stockAmount = stockAmount - ? WHERE walletId = ? and stockId = ?', [sellInfo.stockAmount, walletId, sellInfo.stockId])
+            await pool.query('UPDATE wallet SET totalMoneyAmount = totalMoneyAmount + ? WHERE id = ?', [moneyToRecieveBySell, walletId]);
 
 
             return {

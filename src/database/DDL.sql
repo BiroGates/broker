@@ -37,7 +37,7 @@ CREATE TABLE buy_history (
 ); 
 
 
-CREATE TABLE news_affected (
+CREATE TABLE news (
     id                      VARCHAR(200) PRIMARY KEY,
     durationTimeInSeconds   INT, 
     affectedFactorNumber    INT,
